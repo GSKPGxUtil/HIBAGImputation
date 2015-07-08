@@ -54,7 +54,7 @@ overlap.check <- function(in.data, classifier.loc){
 # model.iden: identify classifiers
 model.iden <- function(overlap.p, race.file){
   overlap.stat <- ddply(overlap.p, c("Platform"), summarize,
-                 MeanPercent = max(Percent),
+                 MeanPercent = mean(Percent),
                  SDPercent = sd(Percent))
   good.Platform <- as.character(overlap.stat$Platform[which.max(overlap.stat$MeanPercent)])
   overlap.p1 <- subset(overlap.p, Platform==good.Platform)
@@ -86,7 +86,7 @@ if (length(myargs) < 1) {
 }
 in.data <- myargs[1]
 race.file <- myargs[2]
-classifier.loc <- "/GWD/bioinfo/projects/statgen/HIBAG_Classifiers/HIBAG_allClassifiers"
+classifier.loc <- "/GWD/appbase/projects/RD-MDD-GX_PUBLIC/HIBAG_Classifiers"
 
 overlap.res <- overlap.check(in.data=in.data, classifier.loc=classifier.loc)
 model.iden(overlap.p=overlap.res, race.file=race.file)
