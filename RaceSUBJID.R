@@ -22,7 +22,7 @@ race.subjid <- function(race.file){
 myargs = commandArgs(TRUE)
 #check all arguments specified
 if (length(myargs) < 1) {
-  cat("Invalid arguments, should be: \"--args [PLINK Data] \"\n")
+  cat("Invalid arguments, should be: \"--args [ancestry file] \"\n")
   q()
 }
 race.file <- myargs[1]
