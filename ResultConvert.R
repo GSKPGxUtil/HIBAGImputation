@@ -285,8 +285,8 @@ dosage2 <- function(pgx, race, model, uncertainty){
 
 myargs = commandArgs(TRUE)
 #check all arguments specified
-if (length(myargs) < 1) {
-  cat("Invalid arguments, should be: \"--args [PLINK Data] \"\n")
+if (length(myargs) < 2) {
+  cat("Invalid arguments, should be: \"--args [root of plink dataset] [ancestry file] \"\n")
   q()
 }
 pgx0 <- myargs[1]
