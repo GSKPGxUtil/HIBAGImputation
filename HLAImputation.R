@@ -8,7 +8,7 @@
 paste0 <- function(...) paste(..., sep="")  
 
 hla.imp <- function(pgx,race,model){
-  library(HIBAG, lib.loc="/home/jxs62889/R/library")
+  library(HIBAG)
   cat(paste(pgx, race, model, sep=", "),"\n")
   # Load the published parameter estimates from European ancestry
   model.list <- get(load(model))
@@ -61,7 +61,7 @@ hla.imp <- function(pgx,race,model){
   }
 }
 
-library(HIBAG,lib.loc="/home/jxs62889/R/library")
+library(HIBAG)
 
 myargs = commandArgs(TRUE)
 #check all arguments specified
@@ -76,7 +76,7 @@ races <- unique(race.d$Ethnicity)
 if ("Other" %in% races){
   races[races=="Other"] <- "Broad"
 }
-classifier.loc <- "/GWD/bioinfo/projects/statgen/HIBAG_Classifiers/HIBAG_allClassifiers"
+classifier.loc <- "/GWD/appbase/projects/RD-MDD-GX_PUBLIC/HIBAG_Classifiers"
 
 for (race in races){
   pgx <- paste(pgx0,race,"MHC",sep=".")
