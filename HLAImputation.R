@@ -7,10 +7,10 @@
 
 paste0 <- function(...) paste(..., sep="")  
 
-hla.imp <- function(pgx,race,model){
-  library(HIBAG)
+hla.imp <- function(pgx,race,model,hla.id){
+
   cat(paste(pgx, race, model, sep=", "),"\n")
-  # Load the published parameter estimates from European ancestry
+  # Load the published parameter estimates from classifier
   model.list <- get(load(model))
   
   #########################################################################
@@ -19,13 +19,11 @@ hla.imp <- function(pgx,race,model){
   bed.f <- paste("./ProcessedData/", pgx,".bed",sep="")
   fam.f <- paste("./ProcessedData/", pgx,".fam",sep="")
   bim.f <- paste("./ProcessedData/", pgx,".bim",sep="")
-  geno <- hlaBED2Geno(bed.fn=bed.f, fam.fn=fam.f, bim.fn=bim.f)
+  geno <- hlaBED2Geno(bed.fn=bed.f, fam.fn=fam.f, bim.fn=bim.f, assembly=c("hg19"))
   summary(geno)
   cat("\n")
   
-  # HLA imputation for each HLA allele
-  # hla.id <- "A"   # "B", "C", "DRB1", "DQA1", "DQB1", "DPB1"
-  for (hla.id in c("A", "B", "C", "DRB1", "DQA1", "DQB1", "DPB1")){
+  # HLA imputation
     model <- hlaModelFromObj(model.list[[hla.id]])
     summary(model)
     cat("\n")
@@ -58,7 +56,9 @@ hla.imp <- function(pgx,race,model){
     write.table(pred.prob, file = name2,quote = F,col.names = T,na="", row.names = T, sep = "\t" )
     write.table(pred.guess$value, file = name3,quote = F,col.names = T,na="", row.names = F, sep = "\t" )
     sink()
-  }
+
+  #Close model to reclaim memory
+  hlaClose(model)
 }
 
 library(HIBAG)
@@ -70,24 +70,13 @@ if (length(myargs) < 1) {
   q()
 }
 pgx0 <- myargs[1]
-race.file <- myargs[2]
-race.d <- read.table(race.file,na.strings = c("",".",NA),check.name=FALSE,as.is=T, head=T, sep="")
-races <- unique(race.d$Ethnicity)
-if ("Other" %in% races){
-  races[races=="Other"] <- "Broad"
-}
+
 classifier.loc <- "/GWD/appbase/projects/RD-MDD-GX_PUBLIC/HIBAG_Classifiers"
 
-for (race in races){
-  pgx <- paste(pgx0,race,"MHC",sep=".")
-  model.file <- "./Results_CheckSNPOverlap/SelectedClassifiers.txt"
-  model <- read.table(model.file,na.strings = c("",".",NA),check.name=FALSE,as.is=T, head=T, sep="")
-  model.run <- model$classifier[match(race, model$race)]
-  model.run <- paste(classifier.loc, model.run, sep="/")
-  hla.imp(pgx=pgx, race=race, model=model.run)
+classifiers <- read.table("./Results_CheckSNPOverlap/SelectedClassifiers.txt", as.is=TRUE, head=TRUE, sep="\t")
+
+for (i in 1:nrow(classifiers)){
+  pgx <- paste(basename(pgx0), ".", classifiers[i,]$Ancestry, ".", classifiers[i,]$HLA.locus, sep="")
+  model.run <- paste(classifier.loc, classifiers[i,]$Classifier, sep="/")
+  hla.imp(pgx=pgx, race=classifiers[i,]$Ancestry, model=model.run, hla.id=classifiers[i,]$HLA.locus)
 }
-
-
-
-
-
