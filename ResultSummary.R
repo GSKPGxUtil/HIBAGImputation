@@ -21,7 +21,7 @@ postprob.conv <- function(res){
   res2$locus <- as.factor(res2$locus)
   rownames(res2) <- 1:nrow(res2)
   
-  library(reshape2,lib.loc="/home/jxs62889/R/library")
+  library(reshape2)
   res2.lng <- melt(res2, id=c("locus"))
   res2.lng$perc <- res2.lng$value/nrow(res)
   res2.lng
@@ -30,9 +30,9 @@ postprob.conv <- function(res){
 postprob.plot <- function(res){
   #res <- out
   
-  library(scales,lib.loc="/home/jxs62889/R/library")
-  library(ggplot2,lib.loc="/home/jxs62889/R/library")
-  library(reshape2,lib.loc="/home/jxs62889/R/library")
+  library(scales)
+  library(ggplot2)
+  library(reshape2)
 
   all.data <- postprob.conv(res)
   p <- ggplot(aes(x=variable, y=perc, group=locus, colour=locus), data=all.data)
@@ -81,33 +81,41 @@ res.merge <- function(pgx, race){
     race.hla <- list()
       n <- 0
       for (hla.id in c("A", "B", "C", "DRB1", "DQA1", "DQB1", "DPB1")){
-        file <- paste("./Results_ImputedHLAAlleles/",pgx,".",r,".MHC_","HLA-",hla.id,"_Imputation.guess.txt",sep="")
-        hla.a <- read.delim(file, stringsAsFactors=F) 
+        file <- paste("./Results_ImputedHLAAlleles/",pgx,".",r,".",hla.id,"_","HLA-",hla.id,"_Imputation.guess.txt",sep="")
+        hla.a <- read.delim(file, stringsAsFactors=F)
+        #Prefix results with locus ID
         names(hla.a)[-1] <- paste("HLA-", hla.id, "_", c("a1","a2","prob"),sep="")
-        
+
+        #Not clear why this is needed
         hla.a$pgx <- pgx
-        if (hla.id!="A"){
+        if (hla.id!="A"){ #For each subsequent locus, append dataframe of results to race.hla list
           n <- n + 1
           hla.a <- hla.a[,grep("^HLA",names(hla.a))]
           race.hla[[n]] <- hla.a
-        } else {
+        } else { #For first locus, initialize a data frame with sample ID
           hla.a <- hla.a[,c("sample.id","pgx","HLA-A_a1","HLA-A_a2","HLA-A_prob")]
           hla.a1 <- hla.a
         }
       }
+    #Assumes same sample order across all loci - potential risk.
     race.hla <- do.call("cbind",race.hla)
     race.hla <- cbind(hla.a1, race.hla)    
-    
+
+    #Need ancestry in results for plotting
     race.hla$Ancestry <- r
     #write.table(race.hla, file = paste("./Results_ImputedHLAAlleles_Summary/Imputed_HLAalleles_",r,sep=""),quote = F,col.names = T,na="", row.names = F, sep = "\t" )
     
     out[[i]] <- race.hla
   }
+  #Concatenate each ancestry group's results
   out <- do.call("rbind",out)
+  #Re-order columns
   hla.c <- names(out)[grep("^HLA",names(out))]
   out <- out[,c("Ancestry","sample.id","pgx",hla.c)]
-  out$Ancestry[out$Ancestry=="Broad"] <- "Other"
+  #out$Ancestry[out$Ancestry=="Broad"] <- "Other"
+  #Write out results
   write.table(out, file = "./Results_ImputedHLAAlleles_Summary/Imputed_HLAalleles_AllSubjects.txt",quote = F,col.names = T,na="", row.names = F, sep = "\t" )
+  #Return results
   out
 }
 
@@ -125,7 +133,7 @@ if ("Other" %in% races){
   races[races=="Other"] <- "Broad"
 }
 
-hla.res <- res.merge(pgx=pgx0, race=races)
+hla.res <- res.merge(pgx=basename(pgx0), race=races)
 postprob.plot(hla.res)
 
 
