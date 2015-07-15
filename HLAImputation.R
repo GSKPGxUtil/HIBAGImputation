@@ -66,7 +66,7 @@ library(HIBAG)
 myargs = commandArgs(TRUE)
 #check all arguments specified
 if (length(myargs) < 1) {
-  cat("Invalid arguments, should be: \"--args [PLINK Data] \"\n")
+  cat("Invalid arguments, should be: \"--args [root of plink dataset] \"\n")
   q()
 }
 pgx0 <- myargs[1]
