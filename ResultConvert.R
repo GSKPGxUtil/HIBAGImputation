@@ -7,14 +7,21 @@
 ######################################################################################################
 
 # info: generate the first 5 columns of .info data
+# dose.data is dataframe of minimac-like dose file (first column is sample ID, second column is "DOSE")
 info <- function(dose.data){
+  #Determine alleles from column names - excluding first 2 columns
   alleles <- names(dose.data)
   alleles <- alleles[grep("HLA", alleles)]
+  #Split locus and allele and keep allele only (locus will be in marker name - "SNP" column)
   Al1 <- unlist(lapply( strsplit(alleles,"\\*"),function(x)x[[2]]))
+  #Dummy allele 2
   Al2 <- rep("X", length(alleles))
-  Freq1 <- as.numeric(0.5*apply(dose.data[,grep("HLA", names(dose.data))],2,mean,na.rm=T))  
-  MAF <- pmin(Freq1, 1-Freq1)
-  info.out <- data.frame(SNP=alleles, Al1, Al2, Freq1, MAF)
+  #Calculate frequency of allele as average of doses (divide by 2 since diploid) rounding to 5 to match minimac output
+  Freq1 <- round(as.numeric(0.5*apply(dose.data[,grep("HLA", names(dose.data))],2,mean,na.rm=T)),5)  
+  #Calculate MAF based on Freq1, rounding to 5 to match minimac output
+  MAF <- round(pmin(Freq1, 1-Freq1),5)
+  #Return dataframe with first 5 columns of minimac info file
+  info.out <- data.frame(SNP=alleles, Al1, Al2, Freq1, MAF,stringsAsFactors=FALSE)
   info.out
 }
 
