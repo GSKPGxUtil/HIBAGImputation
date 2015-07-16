@@ -219,7 +219,9 @@ dosage3 <- function() {
 	#Write results
 	info.file <- paste("./Results_ImputedHLAAlleles_Converted/Imputed_HLAalleles_AllSubjects_Additive.info",sep="")
 	dose.file <- paste("./Results_ImputedHLAAlleles_Converted/Imputed_HLAalleles_AllSubjects_Additive.dose",sep="")
-  
+
+	#Prevent scientific notation:
+	options(scipen=999)
 	write.table(info.df, file = info.file, quote = F,col.names = T,na="", row.names = F, sep = "\t" )  
 	write.table(dose, file = dose.file, quote = F,col.names = F,na="", row.names = F, sep = "\t" )
 }
