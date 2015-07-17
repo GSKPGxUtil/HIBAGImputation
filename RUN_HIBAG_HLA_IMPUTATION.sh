@@ -32,6 +32,7 @@ date
 set PLINK="/GWD/bioinfo/apps/bin/plink --noweb"
 set RDIR="/GWD/bioinfo/tools/bin"
 set SCRIPTDIR="/GWD/bioinfo/projects/statgen/HIBAG_Classifiers/HIBAG_Pipeline/Scripts"
+set R3="/GWD/appbase/projects/statgen/R3.0.0/R-3.0.0/bin/R"
 
 # CHECK FOR DEPENDENCIES
 if (! -e /GWD/bioinfo/apps/bin/plink) then
@@ -123,7 +124,7 @@ date
 if ($SUMMARY) then
     printf "Start to merge and summarize the imputed HLA alleles ..."
     mkdir Results_ImputedHLAAlleles_Summary
-    $RDIR/R64-2.14.0 --vanilla --slave --args $INPUT $ETHNICITY < $SCRIPTDIR/ResultSummary.R
+    $R3 --vanilla --slave --args $INPUT $ETHNICITY < $SCRIPTDIR/ResultSummary.R
     echo "SUMMARY Done!"
     echo "  "
 endif
