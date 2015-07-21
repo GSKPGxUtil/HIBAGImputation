@@ -29,13 +29,13 @@
 echo "Start imputation work..."
 date
 
-set PLINK="/GWD/bioinfo/apps/bin/plink --noweb"
+set PLINK="/GWD/bioinfo/apps/bin/plink"
 set RDIR="/GWD/bioinfo/tools/bin"
 set SCRIPTDIR="/GWD/bioinfo/projects/statgen/HIBAG_Classifiers/HIBAG_Pipeline/Scripts"
 set R3="/GWD/appbase/projects/statgen/R3.0.0/R-3.0.0/bin/R"
 
 # CHECK FOR DEPENDENCIES
-if (! -e /GWD/bioinfo/apps/bin/plink) then
+if (! -e $PLINK) then
     echo "Please install PLINK (http://pngu.mgh.harvard.edu/~purcell/plink/download.shtml) first."; exit 1
 else if (! -e $SCRIPTDIR/RUN_HIBAG_HLA_IMPUTATION.sh) then
     echo "Please copy RUN_HIBAG_HLA_IMPUTATION.sh into this the script directory."; exit 1
