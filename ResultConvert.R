@@ -137,7 +137,7 @@ dosage <- function(pgx, race, model){
   invisible(list(dose=out.dose, info=info.all))
 }
 
-# dosage1a(): trimmed down version of dosage2 to calculate just quantitative doses under additive model
+# dosage3(): trimmed down version of dosage2 to calculate just quantitative doses under additive model
 dosage3 <- function() {
 	#List of probability files for all ancestry groups & loci
 	prob.files = list.files(path="./Results_ImputedHLAAlleles",pattern=".prob.txt$",full.names=TRUE)
