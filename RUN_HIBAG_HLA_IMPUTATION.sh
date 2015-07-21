@@ -49,6 +49,9 @@ else if (! -e $SCRIPTDIR/ResultSummary.R) then
     echo "Please copy ResultSummary.R into this the script directory."; exit 1
 else if (! -e $SCRIPTDIR/ResultConvert.R) then
     echo "Please copy ResultConvert.R into this the script directory."; exit 1
+else if (! -e $SCRIPTDIR/ExtractMatchingAlleles.R) then
+    echo "Please copy ExtractMatchingAlleles.R into this the script directory."
+
 endif
 
 if ($#argv != 2) then
@@ -62,7 +65,8 @@ set ETHNICITY=$2
 # Functions to run
 set CheckSNPOverlap=1
 set RaceSUBJID=1
-set EXTRACT_MHC=1
+set EXTRACT_MHC=0
+set EXTRACT_MATCHING_ALLELES=1
 set IMPUTE=1
 set SUMMARY=1
 set CONVERT=1
@@ -85,6 +89,8 @@ if ($RaceSUBJID) then
     echo "  "
 endif
 
+#Why doing this if advise user to do ahead? Risk to have these hard coded
+#Currently hg18 coord lifted to hg19 but HIBAG authors used wider region for hg19
 if ($EXTRACT_MHC) then
     printf "Extracting SNPs from the MHC for each race group ...\n"
     #    for file in ./ProcessedData/*.txt ; do
@@ -106,6 +112,13 @@ if ($EXTRACT_MHC) then
          $PLINK --bfile $INPUT --chr 6 --from-bp 25651263 --to-bp 33426849 --keep ./ProcessedData/Other.txt --make-bed --out ./ProcessedData/$INPUT.Broad.MHC
     endif
     echo "EXTRACT_MHC Done!"
+    echo "  "
+endif
+
+if ($EXTRACT_MATCHING_ALLELES) then
+    printf "Extract matching alleles based on selected classifiers ...\n"
+    $RDIR/R64-2.14.0 --vanilla --slave --args $INPUT < $SCRIPTDIR/ExtractMatchingAlleles.R
+    echo "ExtractMatchingAlleles Done!"
     echo "  "
 endif
 
