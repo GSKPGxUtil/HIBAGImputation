@@ -31,7 +31,7 @@ date
 
 set PLINK="/GWD/bioinfo/apps/bin/plink"
 set RDIR="/GWD/bioinfo/tools/bin"
-set SCRIPTDIR="/GWD/bioinfo/projects/statgen/HIBAG_Classifiers/HIBAG_Pipeline/Scripts"
+set SCRIPTDIR="/GWD/bioinfo/projects/statgen/GXapp/HIBAGImputation"
 set R3="/GWD/appbase/projects/statgen/R3.0.0/R-3.0.0/bin/R"
 
 # CHECK FOR DEPENDENCIES
