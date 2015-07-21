@@ -31,7 +31,7 @@ date
 
 set PLINK="/GWD/bioinfo/apps/bin/plink"
 set RDIR="/GWD/bioinfo/tools/bin"
-set SCRIPTDIR="/GWD/bioinfo/projects/statgen/GXapp/HIBAGImputation"
+set SCRIPTDIR="/GWD/appbase/projects/statgen/GXapp/HIBAGImputation"
 set R3="/GWD/appbase/projects/statgen/R3.0.0/R-3.0.0/bin/R"
 
 # CHECK FOR DEPENDENCIES
@@ -50,8 +50,7 @@ else if (! -e $SCRIPTDIR/ResultSummary.R) then
 else if (! -e $SCRIPTDIR/ResultConvert.R) then
     echo "Please copy ResultConvert.R into this the script directory."; exit 1
 else if (! -e $SCRIPTDIR/ExtractMatchingAlleles.R) then
-    echo "Please copy ExtractMatchingAlleles.R into this the script directory."
-
+    echo "Please copy ExtractMatchingAlleles.R into this the script directory."; exit 1
 endif
 
 if ($#argv != 2) then
