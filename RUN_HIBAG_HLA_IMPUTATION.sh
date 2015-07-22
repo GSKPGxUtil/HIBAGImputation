@@ -72,7 +72,7 @@ set CONVERT=1
 
 if ($CheckSNPOverlap) then
     printf "Check SNP overlapping betweem GWAS data and classifiers from the MHC ...\n"
-    mkdir Results_CheckSNPOverlap
+    mkdir -p Results_CheckSNPOverlap
     $RDIR/R64-2.14.0 --vanilla --slave --args $INPUT $ETHNICITY < $SCRIPTDIR/CheckSNPOverlap.R
     echo "CheckSNPOverlap Done!"
     echo "  "
@@ -82,7 +82,7 @@ date
 
 if ($RaceSUBJID) then
     printf "Extract SUBJID based on unique race information from the Ethnicity file ...\n"
-    mkdir ProcessedData
+    mkdir -p ProcessedData
     $RDIR/R64-2.14.0 --vanilla --slave --args $ETHNICITY < $SCRIPTDIR/RaceSUBJID.R
     echo "RaceSUBJID Done!"
     echo "  "
@@ -125,7 +125,7 @@ date
 
 if ($IMPUTE) then
     printf "Start to impute HLA alleles for each race ..."
-    mkdir Results_ImputedHLAAlleles
+    mkdir -p Results_ImputedHLAAlleles
     $RDIR/R64-2.14.0 --vanilla --slave --args $INPUT $ETHNICITY < $SCRIPTDIR/HLAImputation.R
     echo "IMPUTE Done!"
     echo " "
@@ -135,7 +135,7 @@ date
 
 if ($SUMMARY) then
     printf "Start to merge and summarize the imputed HLA alleles ..."
-    mkdir Results_ImputedHLAAlleles_Summary
+    mkdir -p Results_ImputedHLAAlleles_Summary
     $R3 --vanilla --slave --args $INPUT $ETHNICITY < $SCRIPTDIR/ResultSummary.R
     echo "SUMMARY Done!"
     echo "  "
@@ -143,7 +143,7 @@ endif
 
 if ($CONVERT) then
     printf "Start to convert the imputed HLA data ..."
-    mkdir Results_ImputedHLAAlleles_Converted
+    mkdir -p Results_ImputedHLAAlleles_Converted
     $RDIR/R64-2.14.0 --vanilla --slave --args $INPUT $ETHNICITY < $SCRIPTDIR/ResultConvert.R
     gzip ./Results_ImputedHLAAlleles_Converted/*.*
     echo "CONVERT Done!"
