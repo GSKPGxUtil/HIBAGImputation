@@ -206,10 +206,10 @@ dosage3 <- function() {
 	info.df$AvgCall = "-"
 	
 	#Calculate rsq - need to confirm this formula
-	xbar <- colMeans(dose[,-c(1,2)]/2)
-	x2bar <- colMeans((dose[,-c(1,2)]/2)^2)
+	xbar <- colMeans(dose[,-c(1,2)])
+	x2bar <- colMeans((dose[,-c(1,2)])^2)
 	#Rounding to 5 to match minimac output
-	info.df$Rsq = round((x2bar - xbar^2)/(xbar*(1-xbar)),5)
+	info.df$Rsq = round((x2bar - xbar^2)/(2*(xbar/2)*(1-xbar/2)),5)
 	#Replacing NaNs due to division by 0 when xbar is 0 with 0
 	info.df$Rsq[is.na(info.df$Rsq)] = 0
 	
