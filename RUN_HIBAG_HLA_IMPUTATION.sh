@@ -33,6 +33,7 @@ set PLINK="/GWD/bioinfo/apps/bin/plink"
 set RDIR="/GWD/bioinfo/tools/bin"
 set SCRIPTDIR="/GWD/appbase/projects/statgen/GXapp/HIBAGImputation"
 set R3="/GWD/appbase/projects/statgen/R3.0.0/R-3.0.0/bin/R"
+setenv R_LIBS_USER /GWD/appbase/projects/statgen/GXapp/R-packages
 
 # CHECK FOR DEPENDENCIES
 if (! -e $PLINK) then
@@ -62,6 +63,7 @@ set INPUT=$1
 set ETHNICITY=$2
 
 # Functions to run
+set SubsetToMHC=1
 set CheckSNPOverlap=1
 set RaceSUBJID=1
 set EXTRACT_MHC=0
@@ -69,6 +71,16 @@ set EXTRACT_MATCHING_ALLELES=1
 set IMPUTE=1
 set SUMMARY=1
 set CONVERT=1
+
+if ($SubsetToMHC) then
+    printf "Subsetting data to MHC ...\n"
+    $PLINK --bfile $INPUT --chr 6 --from-bp 25651242 --to-bp 33544122 --make-bed --out $INPUT.MHC
+    set INPUT=$INPUT.MHC
+    echo "Subsetting data to MHC done!"
+    echo "  "
+endif
+
+date
 
 if ($CheckSNPOverlap) then
     printf "Check SNP overlapping betweem GWAS data and classifiers from the MHC ...\n"
