@@ -34,8 +34,9 @@ This workflow consists of a csh driver script which calls R scripts to perform t
   * Valid Ethnicity values are European, Asian, Hispanic, African, and Broad where Broad refers to the pre-fit models trained with all ancestry groups and recommended for best performance in mixed / unknown ancestry groups.
   * Current recommendation is to use self-reported ancestry as follows:
     * If ethnicity is Hispanic, ancestry is Hispanic. Otherwise, use this table to map race to ancestry:
+
 Race | Ancestry
------------- | ------------
+---- | --------
 African American/African Heritage | African
 American Indian or Alaskan Native | Broad
 Asian - Central/South Asian Heritage | Broad
