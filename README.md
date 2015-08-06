@@ -27,6 +27,7 @@ This workflow consists of a csh driver script which calls R scripts to perform t
   * The variants in the the xMHC region are represented in the bim file with '6' in column 1 and the GRCh37 coordinate in column 3.
   * The reference dataset used for training the pre-fit models did not contain indels so no need to worry about their representation (e.g. VCF conventions) as they won't be used.
   * Strand also does not matter as the reference dataset used for training was not resolved to any particular strand - a "hard alignment" will be done by matching alleles and dropping ambiguous 'A/T' and 'C/G' SNVs.
+  * SNP name also does not matter as the "hard alignment" will be done by coordinate.
 * An ancestry map file is included
   * Two space-delimited columns with headers "SUBJID" and "Ethnicity"
   * SUBJID should match the FID and IID in the fam file (i.e. FID must match IID)
@@ -34,7 +35,7 @@ This workflow consists of a csh driver script which calls R scripts to perform t
   * Current recommendation is to use self-reported ancestry as follows:
     * If ethnicity is Hispanic, ancestry is Hispanic. Otherwise, use this table to map race to ancestry:
       Race | Ancestry
-      ----- | ---------
+      ---- | --------
       African American/African Heritage | African
       American Indian or Alaskan Native | Broad
       Asian - Central/South Asian Heritage | Broad
