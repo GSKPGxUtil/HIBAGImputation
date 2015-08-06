@@ -3,7 +3,7 @@
 Judong Shen
 Andrew Slater
 
-This workflow implements HIBAG<sup>1</sup> to impute 4-digit classical HLA alleles from SNV genotypes in the xMHC region and convert the probabilities to a binary-expanded set of doses in [minimac](http://genome.sph.umich.edu/wiki/Minimac) format.  HIBAG was developed in a collaboration between GSK and the University of Washington which maintains the R package and hosts a series of pre-fit classification models on their [website](www.biostat.washington.edu/~bsweir/HIBAG).
+This workflow implements HIBAG<sup>1</sup> to impute 4-digit classical HLA alleles from SNV genotypes in the xMHC region and convert the probabilities to a binary-expanded set of doses in [minimac](http://genome.sph.umich.edu/wiki/Minimac) format.  HIBAG was developed in a collaboration between GSK and the University of Washington which maintains the R package and hosts a series of pre-fit classification models on their [website](http://www.biostat.washington.edu/~bsweir/HIBAG).
 
 Currently, the pre-fit models are all trained from a single reference dataset of individuals with both classical HLA genotypes (determined by direct assaying) and SNV genotypes from arrays of the Illumina 1M class (unclear which specific version(s)). To train each model, the SNV genotypes in the reference dataset were subset to the variants on the array of interest that are polymorphic in the ancestry group of interest. For example, the Asian model for the Affymetrix Genome-Wide Human SNP Array 5.0 was trained using the Asian individuals from the reference dataset, removing monomorphic SNVs in this subset of individuals and removing SNVs not assayed by the Affymetrix Genome-Wide Human SNP Array 5.0.
 
@@ -17,4 +17,4 @@ This workflow consists or a csh driver script which calls R scripts to perform t
 4. Plot the probability distributions from (3).
 5. Transform the genotype-level probabilities to binary-expanded doses and format as a pair of minimac dose / info files.
 
-1) Zheng X, Shen J, Cox C, Wakefield J, Ehm M, Nelson M, Weir BS. HIBAG – HLA Genotype Imputation with Attribute Bagging. Pharmacogenomics Journal (2013). doi: 10.1038/tpj.2013.18.
+1) Zheng X, Shen J, Cox C, Wakefield J, Ehm M, Nelson M, Weir BS. HIBAG – HLA Genotype Imputation with Attribute Bagging. Pharmacogenomics Journal (2013). [doi: 10.1038/tpj.2013.18](http://dx.doi.org/10.1038/tpj.2013.18).
