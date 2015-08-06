@@ -1,7 +1,6 @@
 # HIBAG HLA Imputation Workflow
 
-Judong Shen
-Andrew Slater
+Judong Shen & Andrew Slater
 
 This workflow implements HIBAG<sup>1</sup> to impute 4-digit classical HLA alleles from SNV genotypes in the xMHC region and convert the probabilities to a binary-expanded set of doses in [minimac](http://genome.sph.umich.edu/wiki/Minimac) format.  HIBAG was developed in a collaboration between GSK and the University of Washington which maintains the R package and hosts a series of pre-fit classification models on their [website](http://www.biostat.washington.edu/~bsweir/HIBAG).
 
@@ -28,6 +27,7 @@ This workflow consists of a csh driver script which calls R scripts to perform t
   * The reference dataset used for training the pre-fit models did not contain indels so no need to worry about their representation (e.g. VCF conventions) as they won't be used.
   * Strand also does not matter as the reference dataset used for training was not resolved to any particular strand - a "hard alignment" will be done by matching alleles and dropping ambiguous 'A/T' and 'C/G' SNVs.
   * SNP name also does not matter as the "hard alignment" will be done by coordinate.
+  * The driver script will subset the data to the xMHC before starting so no need to do this yourself.
 * An ancestry map file is included
   * Two space-delimited columns with headers "SUBJID" and "Ethnicity"
   * SUBJID should match the FID and IID in the fam file (i.e. FID must match IID)
