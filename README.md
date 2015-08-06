@@ -64,6 +64,7 @@ Alternatively, to submit to SGE with e-mail notification
 
 #### What the workflow is doing - how to read outputs
 The workflow proceeds sequentially (cost/benefit of adding parallel computing support is unclear) as follows:
+
 1. Subset the data to the xMHC region creating a plink dataset in the same directory using the same name with '.MHC' appended. The boundaries of this region are defined within the HIBAG package and for GRCh37 are 6:25651242-33544122. Note, this does not correspond to a lift-over of the NCBI36 region referenced in the original HIBAG paper. Future upgrades to GRCh38 should look for the region definition within the HIBAG package and not rely on a lifting of these coordinates.
 2. For each ancestry group present in the data per the ancestry map file, iterate over the relevant pre-fit models in /GWD/appbase/projects/RD-MDD-GX_PUBLIC/HIBAG_Classifiers (downloaded July 2, 2015) where the name of the ancestry group is present in the file name. For each model and locus:
   1. Determine the coordinate and alleles of the SNVs and their contribution to the model.
