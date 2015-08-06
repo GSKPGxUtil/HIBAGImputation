@@ -23,7 +23,7 @@ This workflow consists of a csh driver script which calls R scripts to perform t
 
 #### Assumptions / pre-requisites / how to prepare data to be imputed
 * Data is plink binary format on GRCh37
-  * The variants in the the xMHC region are represented in the bim file with '6' in column 1 and the GRCh37 coordinate in column 3.
+  * The variants in the the xMHC region are represented in the bim file with '6' in column 1 and the GRCh37 coordinate in column 4.
   * The reference dataset used for training the pre-fit models did not contain indels so no need to worry about their representation (e.g. VCF conventions) as they won't be used.
   * Strand also does not matter as the reference dataset used for training was not resolved to any particular strand - a "hard alignment" will be done by matching alleles and dropping ambiguous 'A/T' and 'C/G' SNVs.
   * SNP name also does not matter as the "hard alignment" will be done by coordinate.
@@ -70,8 +70,19 @@ The workflow proceeds sequentially (cost/benefit of adding parallel computing su
   1. Determine the coordinate and alleles of the SNVs and their contribution to the model.
   2. Remove any ambiguous 'A/T' and 'C/G' SNVs.
   3. Remove any SNVs whose alleles do not match those observed in the data for the same coordinate.
-  4. Using SNVs remaining, summarize overlap with data and append to Results_CheckSNPOverlap/comparison.txt.
-    * TO DO - describe metrics reported in this file
+  4. Using SNVs remaining, summarize overlap with data and append to Results_CheckSNPOverlap/comparison.txt:
+
+        Metric | Description
+        ------ | -----------
+        num.classifier | Number of classifiers in model
+        num.model.snp | Number of SNVs in model
+        mean.snp.in.classif | average number of SNVs in a classifier
+        mean.haplo.in.classif | average number of haplotypes in a classifier
+        mean.accuracy | average accuracy of a classifier
+        num.model.in.data | Number of SNVs in model and data (excludes ambiguous & mis-matching alleles)
+        pct.model.in.data | num.model.in.data / num.model.snp
+        sum.miss.pctl | The number of classifiers each SNV contributes to is converted to percentile as a measure of importance (higher = more important). This is the sum of the percentiles of SNVs not counted in num.model.in.data.
+
   5. Append list of names of overlapping SNVs in data to Results_CheckSNPOverlap/[Model File Name].extract.IDs.txt.
 3. Using the overlap summary in Results_CheckSNPOverlap/comparison.txt, for each ancestry group and locus, select the optimal model by ranking on both mean.accuracy (higher = better rank) and sum.miss.pctl (lower = better rank) and summing these two ranks to get an overall rank. Ties in this overall rank are broken by selecting max pct.model.in.data. Selected models are written to Results_CheckSNPOverlap/SelectedClassifiers.txt.
 4. Parse the ancestry map file into a series of plink --keep files, one for each ancestry group in ProcessedData/.
