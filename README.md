@@ -49,7 +49,7 @@ This workflow consists of a csh driver script which calls R scripts to perform t
           White - White/Caucasian/European Heritage | European
 
 #### Running workflow
-Call the driver script. Below is an example command if your plink dataset is named PGxNNN.bed, your ancestry map file is named ancestry.txt and both are in the current directory. nohup is recommended as it will take several hours to run. In this example, stdout and stderr are re-directed to files in the current directory (re-running will overwrite these files).
+Call the driver script. Below is an example command if your plink dataset is named PGxNNN.bed, your ancestry map file is named ancestry.txt and both are in the current directory. nohup is recommended as it will take several hours to run (~3 hours for 150 subjects). In this example, stdout and stderr are re-directed to files in the current directory (re-running will overwrite these files).
 ```
   nohup /GWD/appbase/projects/statgen/GXapp/HIBAGImputation/RUN_HIBAG_HLA_IMPUTATION.sh PGxNNN ancestry.txt >myrun.out 2>myrun.err
 ```
@@ -81,10 +81,10 @@ The workflow proceeds sequentially (cost/benefit of adding parallel computing su
 6. For each ancestry group and locus, use the relevant data subset in ProcessedData/ and the selected model to impute HLA genotypes to Results_ImputedHLAAlleles/.
 7. Plot the distribution of the probabilities of the "best guess" genotypes (highest probability) by locus across all ancestry groups to Results_ImputedHLAAlleles_Summary/PosteriorProbabilityPlot_allSubjects.pdf and by locus and ancestry group to Results_ImputedHLAAlleles_Summary/PosteriorProbabilityPlot_ByRace.pdf.
 8. Convert the probabilities to binary-expanded additive doses in minimac format:
-  * Initialize info file by creating a binary expanded marker for each allele:
+  1. Initialize info file by creating a binary expanded marker for each allele:
     * SNP = [Coord]_[Locus]*[allele]     where Coord is the midpoint of the locus
     * Al1 = [allele]
     * Al2 = X
-  * Sum the probabilities for each allele over all possible genotypes counting the homozygote genotype twice to obtain an additive dose (i.e. scaled from 0-2 like minimac).
-  * Calculate Freq1 (half the mean of the doses), MAF and Rsq to finish the info file (formula for calculating AvgCall is unknown).
-  * gzip files in Results_ImputedHLAAlleles_Converted/.
+  2. Sum the probabilities for each allele over all possible genotypes counting the homozygote genotype twice to obtain an additive dose (i.e. scaled from 0-2 like minimac).
+  3. Calculate Freq1 (half the mean of the doses), MAF and Rsq to finish the info file (formula for calculating AvgCall is unknown).
+  4. gzip files in Results_ImputedHLAAlleles_Converted/.
