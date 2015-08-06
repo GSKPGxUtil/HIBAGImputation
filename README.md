@@ -34,17 +34,17 @@ This workflow consists of a csh driver script which calls R scripts to perform t
   * Valid Ethnicity values are European, Asian, Hispanic, African, and Broad where Broad refers to the pre-fit models trained with all ancestry groups and recommended for best performance in mixed / unknown ancestry groups.
   * Current recommendation is to use self-reported ancestry as follows:
     * If ethnicity is Hispanic, ancestry is Hispanic. Otherwise, use this table to map race to ancestry:
-      Race | Ancestry
-      ---- | --------
-      African American/African Heritage | African
-      American Indian or Alaskan Native | Broad
-      Asian - Central/South Asian Heritage | Broad
-      Asian - East Asian Heritage | Asian
-      Asian - Japanese Heritage | Asian
-      Asian - South East Asian Heritage | Asian
-      Native Hawaiian or Other Pacific Islander | Broad
-      White - Arabic/North African Heritage | European
-      White - White/Caucasian/European Heritage | European
+Race | Ancestry
+---- | --------
+African American/African Heritage | African
+American Indian or Alaskan Native | Broad
+Asian - Central/South Asian Heritage | Broad
+Asian - East Asian Heritage | Asian
+Asian - Japanese Heritage | Asian
+Asian - South East Asian Heritage | Asian
+Native Hawaiian or Other Pacific Islander | Broad
+White - Arabic/North African Heritage | European
+White - White/Caucasian/European Heritage | European
 
 #### Running workflow
 * Call the driver script. Here is example command if your plink dataset is named PGxNNN.bed and your ancestry map file is named ancestry.txt and both are in the current directory. nohup is recommended as it will take several hours to run. In this example, stdout and stderr are re-directed to files in the current directory (re-running will overwrite these files).
