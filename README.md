@@ -64,26 +64,26 @@ Alternatively, to submit to SGE with e-mail notification
 
 #### What the workflow is doing - how to read outputs
 The workflow proceeds sequentially (cost/benefit of adding parallel computing support is unclear) as follows:
-1) Subset the data to the xMHC region creating a plink dataset in the same directory using the same name with '.MHC' appended. The boundaries of this region are defined within the HIBAG package and for GRCh37 are 6:25651242-33544122. Note, this does not correspond to a lift-over of the NCBI36 region referenced in the original HIBAG paper. Future upgrades to GRCh38 should look for the region definition within the HIBAG package and not rely on a lifting of these coordinates.
-2) For each ancestry group present in the data per the ancestry map file, iterate over the relevant pre-fit models in /GWD/appbase/projects/RD-MDD-GX_PUBLIC/HIBAG_Classifiers (downloaded July 2, 2015) where the name of the ancestry group is present in the file name. For each model and locus:
-    1) Determine the coordinate and alleles of the SNVs and their contribution to the model.
-    2) Remove any ambiguous 'A/T' and 'C/G' SNVs.
-    3) Remove any SNVs whose alleles do not match those observed in the data for the same coordinate.
-    4) Using SNVs remaining, summarize overlap with data and append to Results_CheckSNPOverlap/comparison.txt.
-        * TO DO - describe metrics reported in this file
-    5) Append list of names of overlapping SNVs in data to Results_CheckSNPOverlap/[Model File Name].extract.IDs.txt.
-3) Using the overlap summary in Results_CheckSNPOverlap/comparison.txt, for each ancestry group and locus, select the optimal model by ranking on both mean.accuracy (higher = better rank) and sum.miss.pctl (lower = better rank) and summing these two ranks to get an overall rank. Ties in this overall rank are broken by selecting max pct.model.in.data. Selected models are written to Results_CheckSNPOverlap/SelectedClassifiers.txt.
-4) Parse the ancestry map file into a series of plink --keep files, one for each ancestry group in ProcessedData/.
-5) For each ancestry group and locus, create a subset of the data in ProcessedData/ be restricting to: 
-    * the individuals within the group using the --keep file in ProcessedData/
-    * the SNVs in the selected model using the --extract file in Results_CheckSNPOverlap/ 
-6) For each ancestry group and locus, use the relevant data subset in ProcessedData/ and the selected model to impute HLA genotypes to Results_ImputedHLAAlleles/.
-7) Plot the distribution of the probabilities of the "best guess" genotypes (highest probability) by locus across all ancestry groups to Results_ImputedHLAAlleles_Summary/PosteriorProbabilityPlot_allSubjects.pdf and by locus and ancestry group to Results_ImputedHLAAlleles_Summary/PosteriorProbabilityPlot_ByRace.pdf.
-8) Convert the probabilities to binary-expanded additive doses in minimac format:
-    * Initialize info file by creating a binary expanded marker for each allele:
-      * SNP = [Coord]_[Locus]*[allele]     where Coord is the midpoint of the locus
-      * Al1 = [allele]
-      * Al2 = X
-    * Sum the probabilities for each allele over all possible genotypes counting the homozygote genotype twice to obtain an additive dose (i.e. scaled from 0-2 like minimac).
-    * Calculate Freq1 (half the mean of the doses), MAF and Rsq to finish the info file (formula for calculating AvgCall is unknown).
-    * gzip files in Results_ImputedHLAAlleles_Converted/.
+1. Subset the data to the xMHC region creating a plink dataset in the same directory using the same name with '.MHC' appended. The boundaries of this region are defined within the HIBAG package and for GRCh37 are 6:25651242-33544122. Note, this does not correspond to a lift-over of the NCBI36 region referenced in the original HIBAG paper. Future upgrades to GRCh38 should look for the region definition within the HIBAG package and not rely on a lifting of these coordinates.
+2. For each ancestry group present in the data per the ancestry map file, iterate over the relevant pre-fit models in /GWD/appbase/projects/RD-MDD-GX_PUBLIC/HIBAG_Classifiers (downloaded July 2, 2015) where the name of the ancestry group is present in the file name. For each model and locus:
+  1. Determine the coordinate and alleles of the SNVs and their contribution to the model.
+  2. Remove any ambiguous 'A/T' and 'C/G' SNVs.
+  3. Remove any SNVs whose alleles do not match those observed in the data for the same coordinate.
+  4. Using SNVs remaining, summarize overlap with data and append to Results_CheckSNPOverlap/comparison.txt.
+    * TO DO - describe metrics reported in this file
+  5. Append list of names of overlapping SNVs in data to Results_CheckSNPOverlap/[Model File Name].extract.IDs.txt.
+3. Using the overlap summary in Results_CheckSNPOverlap/comparison.txt, for each ancestry group and locus, select the optimal model by ranking on both mean.accuracy (higher = better rank) and sum.miss.pctl (lower = better rank) and summing these two ranks to get an overall rank. Ties in this overall rank are broken by selecting max pct.model.in.data. Selected models are written to Results_CheckSNPOverlap/SelectedClassifiers.txt.
+4. Parse the ancestry map file into a series of plink --keep files, one for each ancestry group in ProcessedData/.
+5. For each ancestry group and locus, create a subset of the data in ProcessedData/ be restricting to: 
+  * the individuals within the group using the --keep file in ProcessedData/
+  * the SNVs in the selected model using the --extract file in Results_CheckSNPOverlap/ 
+6. For each ancestry group and locus, use the relevant data subset in ProcessedData/ and the selected model to impute HLA genotypes to Results_ImputedHLAAlleles/.
+7. Plot the distribution of the probabilities of the "best guess" genotypes (highest probability) by locus across all ancestry groups to Results_ImputedHLAAlleles_Summary/PosteriorProbabilityPlot_allSubjects.pdf and by locus and ancestry group to Results_ImputedHLAAlleles_Summary/PosteriorProbabilityPlot_ByRace.pdf.
+8. Convert the probabilities to binary-expanded additive doses in minimac format:
+  * Initialize info file by creating a binary expanded marker for each allele:
+    * SNP = [Coord]_[Locus]*[allele]     where Coord is the midpoint of the locus
+    * Al1 = [allele]
+    * Al2 = X
+  * Sum the probabilities for each allele over all possible genotypes counting the homozygote genotype twice to obtain an additive dose (i.e. scaled from 0-2 like minimac).
+  * Calculate Freq1 (half the mean of the doses), MAF and Rsq to finish the info file (formula for calculating AvgCall is unknown).
+  * gzip files in Results_ImputedHLAAlleles_Converted/.
