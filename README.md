@@ -1,17 +1,20 @@
-**HIBAG HLA Imputation Pipeline**
+# HIBAG HLA Imputation Workflow
 
 Judong Shen
+Andrew Slater
 
-The HIBAG HLA imputation pipeline is a tool that can automate the task of HLA genotype imputation using [HIBAG R package](http://www.bioconductor.org/packages/release/bioc/html/HIBAG.html). HIBAG is a state of the art software package for imputing HLA types using SNP data. It combines the concepts of attribute bagging, an ensemble classifier method, with haplotype inference for SNPs and HLA types. Attribute bagging is a technique which improves the accuracy and stability of classifier ensembles using bootstrap aggregating and random variable selection. HIBAG can be used by researchers with [published parameter estimates](http://www.biostat.washington.edu/~bsweir/HIBAG/#estimates) instead of requiring access to large training sample datasets. The published parameter estimates are stored in the published classifiers which were built from various genotyping arrays. All the genotype arrays have ancestry-specific models for European, Asian, Hispanic or African ancestry and most also have a mixed-ancestry model (“Broad”).
+This workflow implements HIBAG<sup>1</sup> to impute 4-digit classical HLA alleles from SNV genotypes in the xMHC region and convert the probabilities to a binary-expanded set of doses in [minimac](http://genome.sph.umich.edu/wiki/Minimac) format.  HIBAG was developed in a collaboration between GSK and the University of Washington which maintains the R package and hosts a series of pre-fit classification models on their [website](www.biostat.washington.edu/~bsweir/HIBAG).
 
-HIBAG HLA imputation pipeline is implemented by using shell scripts and R scripts. The shell scripts call all the R scripts and PLINK commands to automate the entire HLA imputation processes. The details of the HIBAG HLA imputation pipeline are as follows:
-* A commented script called RUN_HIBAG_HLA_IMPUTATION.sh that can be executed to completely run the HLA imputation workflow. 
-* Input of RUN_HIBAG_HLA_IMPUTATION.sh:
-  * A set of GWAS data or xMHC GWAS data including the SNP genotype data (with rsids) in xMHC region (hg19, chr6: 025759242-033534827) in PLINK format (.bed/bim/fam).
-  * A tab-delimited text file including exactly two columns “SUBJID” and “Ethnicity”. The subject ids included in this file should be exactly the same as those in the PLINK .fam file. The “Ethnicity” column can contain up to five ancestries: European, Asian, Hispanic, African and Other. 
-* The shell scripts call all the R scripts and PLINK commands to automate the entire HLA imputation processes. 
-  * CheckSNPOverlap: compare the SNPs included in the GWAS data and those included in all the available classifiers
-  * RaceSUBJID: generate the subset of subject ids for each ethnicity and then extract its corresponding subset of GWAS or SNP data in xMHC region respectively
-  * HLAImputation: impute HLA alleles for each of the seven HLA loci (HLA-A, -B, -C, -DRB1, -DQA1, -DQB1 and-DPB1) and each ethnicity respectively by using the corresponding optimal classifiers identified in CheckSNPOverlap step and the corresponding subset GWAS or SNP data generated in the RaceSUBJID step.
-  * ResultSummary: merge and summarize the imputed HLA alleles. 
-  * ResultConvert: recode the best guessed HLA genotypes into binary format for each unique HLA alleles and recode the carrier genotypes as 0/1/2 and 0/1 for additive and dominant genetics model respectively, which does not consider the imputation uncertainty. In addition, also calculate the dosage and other information such as allele frequency and Rsq values etc. for each unique HLA allele additive and dominant genetics model respectively by incorporating the imputation uncertainty.
+Currently, the pre-fit models are all trained from a single reference dataset of individuals with both classical HLA genotypes (determined by direct assaying) and SNV genotypes from arrays of the Illumina 1M class (unclear which specific version(s)). To train each model, the SNV genotypes in the reference dataset were subset to the variants on the array of interest that are polymorphic in the ancestry group of interest. For example, the Asian model for the Affymetrix Genome-Wide Human SNP Array 5.0 was trained using the Asian individuals from the reference dataset, removing monomorphic SNVs in this subset of individuals and removing SNVs not assayed by the Affymetrix Genome-Wide Human SNP Array 5.0.
+
+### High-level workflow overview
+
+This workflow consists or a csh driver script which calls R scripts to perform the following steps:
+
+1. Check the SNV overlap between the dataset to be imputed and each of the pre-fit models.
+2. For each ancestry group and HLA locus, select the best pre-fit model from the results of (1).
+3. For each ancestry group and HLA locus, predict the HLA genotypes using the model selected in (2).
+4. Plot the probability distributions from (3).
+5. Transform the genotype-level probabilities to binary-expanded doses and format as a pair of minimac dose / info files.
+
+1) Zheng X, Shen J, Cox C, Wakefield J, Ehm M, Nelson M, Weir BS. HIBAG – HLA Genotype Imputation with Attribute Bagging. Pharmacogenomics Journal (2013). doi: 10.1038/tpj.2013.18.
