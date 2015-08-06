@@ -83,6 +83,8 @@ overlap.check <- function(in.data, classifier.loc, ancestry.file){
       #Add another column to the dataframe with percentile of marker's contribution to classifier
       #Note - this does not exclude markers that are not in any classifier (usually only a handful)
       perf.df <- within(perf.df, snp.hist.pctl <- rank(snp.hist)/length(snp.hist))
+      #Subset to markers missing from data
+      perf.df.missing <- perf.df[!perf.df$snp.position %in% overlap.pos.am,]
 
       #Append results to out dataframe
       out <- rbind(out, data.frame(classifier = classifier, Assay = classifier1[1], Ancestry = classifier1[2],
@@ -90,7 +92,7 @@ overlap.check <- function(in.data, classifier.loc, ancestry.file){
         num.classifier = perf$num.classifier, num.model.snp = length(model.snp.pos),
         mean.snp.in.classif = perf$info$Mean[1], mean.haplo.in.classif = perf$info$Mean[2], mean.accuracy = perf$info$Mean[3],
         num.model.in.data = length(overlap.pos.am), pct.model.in.data = length(overlap.pos.am) / length(model.snp.pos),
-        sum.miss.pctl = sum(perf.df$snp.hist.pctl)))
+        sum.miss.pctl = sum(perf.df.missing$snp.hist.pctl)))
 
       #Close model to reclaim memory
       hlaClose(model)
