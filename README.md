@@ -28,7 +28,7 @@ This workflow consists of a csh driver script which calls R scripts to perform t
   * Strand also does not matter as the reference dataset used for training was not resolved to any particular strand - a "hard alignment" will be done by matching alleles and dropping ambiguous 'A/T' and 'C/G' SNVs.
   * SNP name also does not matter as the "hard alignment" will be done by coordinate.
   * The driver script will subset the data to the xMHC before starting so no need to do this yourself.
-  * CAUTION: Do not use any datasets downstream of the whole-genome imputation "alignment" step (imputation-Makefile-v2) as this will remove all variants not in the reference haplotypes an many of the xMHC variants are missing from these haplotypes due to difficulty in sequencing this region.
+  * CAUTION: Do not use any datasets downstream of the whole-genome imputation "alignment" step (imputation-Makefile-v2) as this will remove all variants not in the reference haplotypes and many of the xMHC variants are missing from these haplotypes due to difficulty in sequencing this region.
 * An ancestry map file is included
   * Two space-delimited columns with headers "SUBJID" and "Ethnicity"
   * SUBJID should match the FID and IID in the fam file (i.e. FID must match IID)
@@ -76,9 +76,9 @@ The workflow proceeds sequentially (cost/benefit of adding parallel computing su
         ------ | -----------
         num.classifier | Number of classifiers in model
         num.model.snp | Number of SNVs in model
-        mean.snp.in.classif | average number of SNVs in a classifier
-        mean.haplo.in.classif | average number of haplotypes in a classifier
-        mean.accuracy | average accuracy of a classifier
+        mean.snp.in.classif | Average number of SNVs in a classifier
+        mean.haplo.in.classif | Average number of haplotypes in a classifier
+        mean.accuracy | Average accuracy of a classifier
         num.model.in.data | Number of SNVs in model and data (excludes ambiguous & mis-matching alleles)
         pct.model.in.data | num.model.in.data / num.model.snp
         sum.miss.pctl | The number of classifiers each SNV contributes to is converted to percentile as a measure of importance (higher = more important). This is the sum of the percentiles of SNVs not counted in num.model.in.data.
@@ -86,7 +86,7 @@ The workflow proceeds sequentially (cost/benefit of adding parallel computing su
   5. Append list of names of overlapping SNVs in data to Results_CheckSNPOverlap/[Model File Name].extract.IDs.txt.
 3. Using the overlap summary in Results_CheckSNPOverlap/comparison.txt, for each ancestry group and locus, select the optimal model by ranking on both mean.accuracy (higher = better rank) and sum.miss.pctl (lower = better rank) and summing these two ranks to get an overall rank. Ties in this overall rank are broken by selecting max pct.model.in.data. Selected models are written to Results_CheckSNPOverlap/SelectedClassifiers.txt.
 4. Parse the ancestry map file into a series of plink --keep files, one for each ancestry group in ProcessedData/.
-5. For each ancestry group and locus, create a subset of the data in ProcessedData/ be restricting to: 
+5. For each ancestry group and locus, create a subset of the data in ProcessedData/ by restricting to: 
   * the individuals within the group using the --keep file in ProcessedData/
   * the SNVs in the selected model using the --extract file in Results_CheckSNPOverlap/ 
 6. For each ancestry group and locus, use the relevant data subset in ProcessedData/ and the selected model to impute HLA genotypes to Results_ImputedHLAAlleles/.

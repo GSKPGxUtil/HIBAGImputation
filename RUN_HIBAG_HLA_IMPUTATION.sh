@@ -83,7 +83,7 @@ endif
 date
 
 if ($CheckSNPOverlap) then
-    printf "Check SNP overlapping betweem GWAS data and classifiers from the MHC ...\n"
+    printf "Check SNP overlapping between GWAS data and classifiers from the MHC ...\n"
     mkdir -p Results_CheckSNPOverlap
     $RDIR/R64-2.14.0 --vanilla --slave --args $INPUT $ETHNICITY < $SCRIPTDIR/CheckSNPOverlap.R
     echo "CheckSNPOverlap Done!"
