@@ -55,7 +55,7 @@ else if (! -e $SCRIPTDIR/ExtractMatchingAlleles.R) then
 endif
 
 if ($#argv != 2) then
-    echo "USAGE: /GWD/bioinfo/projects/statgen/HIBAG_Classifiers/HIBAG_Pipeline/Scripts/RUN_HIBAG_HLA_IMPUTATION.sh DATA (.bed/.bim/.fam) ETHNICITY (.txt)"; exit 1
+    echo "USAGE: RUN_HIBAG_HLA_IMPUTATION.sh DATA (.bed/.bim/.fam) ETHNICITY (.txt)"; exit 1
 endif
 
 # INPUTS
