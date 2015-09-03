@@ -149,13 +149,13 @@ dosage3 <- function() {
 		prob.files.locus = prob.files[grep(paste('HLA-',hla.id,sep=""),prob.files)]
 		#Read first file
 		if (length(prob.files.locus) > 0) {
-			prob.df = read.table(prob.files.locus[1],row.names=NULL)
+			prob.df = read.table(prob.files.locus[1],row.names=NULL,check.names=FALSE)
 		}
 		#Remove first file from list
 		prob.files.locus = prob.files.locus[-1]
 		#For each subsequent file, read and merge by genotype (first column)
 		while (length(prob.files.locus) > 0) {
-			prob.df2 = read.table(prob.files.locus[1],row.names=NULL)
+			prob.df2 = read.table(prob.files.locus[1],row.names=NULL,check.names=FALSE)
 			prob.dfm = merge(prob.df,prob.df2,by = 1, all=TRUE)
 			prob.df = prob.dfm
 			prob.files.locus = prob.files.locus[-1]
