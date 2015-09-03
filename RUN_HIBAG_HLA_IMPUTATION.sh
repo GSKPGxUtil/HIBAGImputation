@@ -74,7 +74,7 @@ set CONVERT=1
 
 if ($SubsetToMHC) then
     printf "Subsetting data to MHC ...\n"
-    $PLINK --bfile $INPUT --chr 6 --from-bp 25651242 --to-bp 33544122 --make-bed --out $INPUT.MHC
+    /GWD/bioinfo/apps/bin/plink --bfile $INPUT --chr 6 --from-bp 25651242 --to-bp 33544122 --make-bed --out $INPUT.MHC
     set INPUT=$INPUT.MHC
     echo "Subsetting data to MHC done!"
     echo "  "
