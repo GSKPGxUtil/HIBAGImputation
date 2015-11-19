@@ -46,6 +46,7 @@ overlap.check <- function(in.data, classifier.loc, ancestry.file){
       #Determine positions of markers in model
       #Some markers in model are not used in any of classifiers so can't use model's top-level snp vectors
       model.snp.pos <- perf$snp.position[perf$snp.hist > 0]
+      model.snp.hist <- perf$snp.hist[perf$snp.hist > 0]
       #Determine positions in both model and data
       overlap.pos <- intersect(bim.d$V4,model.snp.pos)
       #Initialize vector to store positions of markers with matching alleles
@@ -79,12 +80,11 @@ overlap.check <- function(in.data, classifier.loc, ancestry.file){
       }
       #Create dataframe of positions of markers in model and count of how many classifiers each marker is in
       #Using latter as measure of importance of marker
-      perf.df <- cbind(data.frame(perf["snp.position"]),data.frame(perf["snp.hist"]))
+      perf.df <- cbind(data.frame(model.snp.pos,model.snp.hist))
       #Add another column to the dataframe with percentile of marker's contribution to classifier
-      #Note - this does not exclude markers that are not in any classifier (usually only a handful)
-      perf.df <- within(perf.df, snp.hist.pctl <- rank(snp.hist)/length(snp.hist))
+      perf.df <- within(perf.df, snp.hist.pctl <- rank(model.snp.hist)/length(model.snp.hist))
       #Subset to markers missing from data
-      perf.df.missing <- perf.df[!perf.df$snp.position %in% overlap.pos.am,]
+      perf.df.missing <- perf.df[!perf.df$model.snp.pos %in% overlap.pos.am,]
 
       #Append results to out dataframe
       out <- rbind(out, data.frame(classifier = classifier, Assay = classifier1[1], Ancestry = classifier1[2],
