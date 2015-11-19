@@ -157,7 +157,8 @@ if ($CONVERT) then
     printf "Start to convert the imputed HLA data ..."
     mkdir -p Results_ImputedHLAAlleles_Converted
     $RDIR/R64-2.14.0 --vanilla --slave --args $INPUT $ETHNICITY < $SCRIPTDIR/ResultConvert.R
-    gzip ./Results_ImputedHLAAlleles_Converted/*.*
+    gzip -f ./Results_ImputedHLAAlleles_Converted/Imputed_HLAalleles_AllSubjects_Additive.dose
+    gzip -f ./Results_ImputedHLAAlleles_Converted/Imputed_HLAalleles_AllSubjects_Additive.info
     echo "CONVERT Done!"
     echo "  "
 endif
